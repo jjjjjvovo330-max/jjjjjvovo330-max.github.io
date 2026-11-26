@@ -1,0 +1,11 @@
+export function assess(p,data){
+ const year=Number(p.year),birth=Number(p.birth),age=year-birth; if(!Number.isInteger(birth)||birth<1900||birth>year||![2026,2027].includes(year)||!['male','female'].includes(p.sex)||!['office','worker','head','member','dependent','medical'].includes(p.type))throw Error('출생연도와 가입 유형을 확인해 주세요.');
+ const g=data.general;const parity=birth%2===year%2;let general;
+ if(p.type==='medical'&&age>=g.transitionMin)general={status:parity?'likely':'cycle',name:'의료급여 생애전환기검진',detail:'일반건강검진과 항목이 다릅니다. 공단 대상 등록을 확인해 주세요.'};
+ else if(p.type==='medical'&&(age<g.medicalMin||age>g.medicalMax))general={status:'outside',name:'일반건강검진',detail:age===65?'65세 의료급여는 일반·생애전환기검진 안내 연령에 포함되지 않습니다. 공단에 개별 확인해 주세요.':'일반검진 안내 연령 밖입니다. 다른 검진 제도는 공단에서 확인해 주세요.'};
+ else if(['member','dependent'].includes(p.type)&&age<g.minAgeMember)general={status:'outside',name:'일반건강검진',detail:'세대원·피부양자는 20세 이상 기준입니다.'};
+ else general={status:p.type===g.annualType||parity?'likely':'cycle',name:'일반건강검진',detail:p.type===g.annualType?'직장 비사무직은 매년 검진 주기입니다.':'2년 주기와 출생연도 홀짝을 적용한 예상입니다.'};
+ const cancers=data.cancer.map(c=>{const ageOk=age>=c.ageFrom&&(!c.ageTo||age<=c.ageTo),sexOk=c.sex==='all'||c.sex===p.sex;let status=!ageOk||!sexOk?'outside':c.risk?'conditional':c.cycleYears===1||parity?'likely':'cycle';return {...c,status};});
+ return {age,parity,general,cancers,count:(general.status==='likely'?1:0)+cancers.filter(c=>c.status==='likely').length,preview:year>data.verifiedYear};
+}
+export function calendarEvent(member){if(!/^\d{4}-\d{2}-\d{2}$/.test(member.date))throw Error('예정일이 필요합니다.');const day=member.date.replaceAll('-','');const next=new Date(member.date+'T00:00:00Z');next.setUTCDate(next.getUTCDate()+1);const end=next.toISOString().slice(0,10).replaceAll('-','');return ['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Geongang//Check Guide//KO','BEGIN:VEVENT','UID:'+member.id+'@geongang-check-guide','DTSTAMP:'+new Date().toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,''),'DTSTART;VALUE=DATE:'+day,'DTEND;VALUE=DATE:'+end,'SUMMARY:건강검진 예정','DESCRIPTION:검진기관의 준비 안내를 확인하세요.','BEGIN:VALARM','TRIGGER:-P1D','ACTION:DISPLAY','DESCRIPTION:내일 건강검진 예정','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');}

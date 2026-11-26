@@ -1,0 +1,80 @@
+{
+  "verifiedAt": "2026-11-25",
+  "verifiedYear": 2026,
+  "previewYear": 2027,
+  "sources": {
+    "general": "https://www.nhis.or.kr/nhis/healthin/wbhaca04500m01.do",
+    "cancer": "https://www.nhis.or.kr/nhis/healthin/wbhaca04600m01.do",
+    "target": "https://www.nhis.or.kr/nhis/healthin/retrieveHealthinCheckUpTargetPerson.do",
+    "institutions": "https://www.nhis.or.kr/nhis/healthin/retrieveExmdAdminSearch.do"
+  },
+  "general": {
+    "minAgeMember": 20,
+    "medicalMin": 20,
+    "medicalMax": 64,
+    "transitionMin": 66,
+    "cycleYears": 2,
+    "annualType": "worker"
+  },
+  "cancer": [
+    {
+      "id": "stomach",
+      "name": "위암",
+      "ageFrom": 40,
+      "cycleYears": 2,
+      "sex": "all",
+      "method": "위내시경 · 어려운 경우 위장조영검사 선택",
+      "cost": "일반적으로 본인부담 10%"
+    },
+    {
+      "id": "colon",
+      "name": "대장암",
+      "ageFrom": 50,
+      "cycleYears": 1,
+      "sex": "all",
+      "method": "분변잠혈검사 → 양성일 때 대장내시경",
+      "cost": "국가검진 정해진 항목 공단 전액 부담"
+    },
+    {
+      "id": "liver",
+      "name": "간암",
+      "ageFrom": 40,
+      "cycleYears": 0.5,
+      "sex": "all",
+      "risk": true,
+      "method": "간 초음파 + 혈청알파태아단백 · 상·하반기 각 1회",
+      "cost": "일반적으로 본인부담 10%",
+      "condition": "간경변증·B형/C형 간염 등 공단 고위험군 등록 확인 필요"
+    },
+    {
+      "id": "breast",
+      "name": "유방암",
+      "ageFrom": 40,
+      "cycleYears": 2,
+      "sex": "female",
+      "method": "유방촬영",
+      "cost": "일반적으로 본인부담 10%"
+    },
+    {
+      "id": "cervix",
+      "name": "자궁경부암",
+      "ageFrom": 20,
+      "cycleYears": 2,
+      "sex": "female",
+      "method": "자궁경부세포검사",
+      "cost": "국가검진 정해진 항목 공단 전액 부담"
+    },
+    {
+      "id": "lung",
+      "name": "폐암",
+      "ageFrom": 54,
+      "ageTo": 74,
+      "cycleYears": 2,
+      "sex": "all",
+      "risk": true,
+      "method": "저선량 흉부 CT + 사후 결과 상담",
+      "cost": "일반적으로 본인부담 10%",
+      "condition": "30갑년 이상 흡연력 등 공단 고위험군 선정 및 검진 주기 확인 필요"
+    }
+  ]
+}
